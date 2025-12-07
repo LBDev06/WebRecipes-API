@@ -1,6 +1,5 @@
 import { RecipeRepository } from "@/repositories/recipe-repository";
 import { UsersRepository } from "@/repositories/users-repository";
-import { ResourceNotFoundError } from "@/services/errors/resource-not-found-error";
 
 interface DeleteUseCaseRequest {
   userId:                 string;
@@ -21,13 +20,13 @@ export class DeleteRecipeUseCase{
       const user = await this.usersRepository.findById(userId)
 
       if(!user){
-        throw new ResourceNotFoundError()
+        throw new Error('User not found')
       }
       
       const recipe = await this.recipeRepository.findById(recipeId)
 
       if(!recipe){
-        throw new ResourceNotFoundError()
+        throw new Error('Recipe not found')
       }
       
       const deleteRecipe = await this.recipeRepository.delete({id: recipeId})

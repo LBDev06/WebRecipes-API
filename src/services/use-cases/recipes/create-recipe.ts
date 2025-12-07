@@ -1,6 +1,5 @@
 import { RecipeRepository } from "@/repositories/recipe-repository";
 import { UsersRepository } from "@/repositories/users-repository";
-import { ResourceNotFoundError } from "@/services/errors/resource-not-found-error";
 import { Recipes } from "generated/prisma/browser";
 
 interface RecipeUseCaseRequest {
@@ -38,7 +37,7 @@ export class CreateRecipeUseCase{
       const user = await this.usersRepository.findById(id)
 
       if(!user){
-        throw new ResourceNotFoundError()
+        throw new Error('User not found')
       }
 
       const recipe = await this.recipeRepository.create({

@@ -1,6 +1,5 @@
 import { RecipeRepository } from "@/repositories/recipe-repository";
 import { UsersRepository } from "@/repositories/users-repository";
-import { ResourceNotFoundError } from "@/services/errors/resource-not-found-error";
 import { RecipesUpdateInput } from "generated/prisma/models";
 
 interface EditUseCaseRequest {
@@ -24,19 +23,23 @@ export class EditRecipeUseCase{
       const user = await this.usersRepository.findById(userId)
 
       if(!user){
-        throw new ResourceNotFoundError()
+        throw new Error('User not found')
       }
       
       const recipe = await this.recipeRepository.findById(recipeId)
 
       if(!recipe){
-        throw new ResourceNotFoundError()
+        throw new Error('Recipe not found')
       }
       
       const editRecipe = await this.recipeRepository.update(userId, recipeId, data)
 
-      return {
-        editRecipe
-      }
+    return {
+  ...editRecipe,       
+  recipeId: recipe.id,
+    userId: recipe.userId,
+   }
+
+
     }
 }
