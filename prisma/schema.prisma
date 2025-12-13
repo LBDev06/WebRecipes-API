@@ -18,6 +18,7 @@ model User {
   likes               Like[]
   favorites           Favorite[]
   user_profile        UserProfile?
+  comment             Comment[]
   created_at          DateTime  @default(now())
 }
 
@@ -45,6 +46,7 @@ model Recipes {
   userId             String
   likes              Like[]
   favorites          Favorite[]
+  comment            Comment[]
 }
 
 model Like {
@@ -63,4 +65,13 @@ model Favorite {
   recipes    Recipes  @relation(fields: [recipesId], references: [id])
   recipesId  String
   @@unique([userId, recipesId])  
+}
+
+model Comment {
+  id         String   @id @default(uuid()) 
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  recipes    Recipes  @relation(fields: [recipesId], references: [id])
+  recipesId  String
+  comment    String
 }
