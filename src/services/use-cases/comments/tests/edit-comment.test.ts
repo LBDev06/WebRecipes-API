@@ -1,0 +1,100 @@
+import { InMemoryCommentRepository } from "../../../../repositories/in-memory-repository/in-memory-comment-repository";
+import { InMemoryRecipeRepository } from "../../../../repositories/in-memory-repository/in-memory-recipe-repository";
+import { InMemoryUserRepository } from "../../../../repositories/in-memory-repository/in-memory-user-repository";
+import { beforeEach, describe, expect, it } from "vitest";
+import { EditCommentUseCase } from "../edit-comment";
+import { randomUUID } from "crypto";
+
+let usersRepository: InMemoryUserRepository
+let recipeRepository: InMemoryRecipeRepository
+let commentRepository: InMemoryCommentRepository
+let sut: EditCommentUseCase
+
+describe('Edit Recipe Use Case.', ()=>{
+   beforeEach(()=>{
+    usersRepository = new InMemoryUserRepository()
+    recipeRepository = new InMemoryRecipeRepository()
+    commentRepository = new InMemoryCommentRepository()
+    sut = new EditCommentUseCase(usersRepository, recipeRepository, commentRepository)
+   })
+
+   it('should be able to edit a comment.', async()=>{
+      const user = await usersRepository.create({
+            id:randomUUID(),
+            name:'Alex',
+            email:'exampleOne@gmail.com',
+            password:'2597252'
+        })
+
+         const recipe  = await recipeRepository.create({
+           id:user.id,
+           recipe_title:'teste',
+           description:'descricao',
+           recipe_image:'imagem da receita',
+           cook_time:'10min',
+           servings:'4',
+           ingredients:[
+          "3 cenouras médias",
+          "3 ovos",
+          "1 xícara de óleo",
+          "2 xícaras de farinha de trigo",
+          "2 xícaras de açúcar",
+          "1 colher de sopa de fermento"
+          ],
+         cook_instructions:[
+         "Bata as cenouras, os ovos e o óleo no liquidificador.",
+         "Misture com a farinha, açúcar e fermento.",
+         "Leve ao forno preaquecido a 180°C por cerca de 40 minutos.",
+         "Prepare a cobertura de chocolate e jogue por cima."
+         ],
+         user:{
+            connect:{
+                id:user.id
+            }
+         }
+       })
+
+       const commment = await commentRepository.create({
+           id:randomUUID(),
+          user:{
+            connect:{
+                id:user.id
+            }
+           },
+        recipes:{
+            connect:{
+                id:recipe.id
+            }
+          },
+          comment:'primeiro comentatio'
+       })
+
+       const editComment = await sut.update({
+        userId:user.id,
+        recipeId:recipe.id,
+        commentId:commment.id,
+        data:{
+            comment:"segundo comentario"
+        }
+       })
+
+       expect(editComment.editComment.comment).toBe('segundo comentario')
+       expect(editComment.editComment.comment).not.toBe('primeiro comentatio')
+       expect(editComment.editComment.userId).toBe(user.id)
+       expect(editComment.editComment.recipesId).toBe(recipe.id)
+   })
+
+   it('should not be able to edit a comment without invalid userId, recipeId or commentId.', async()=>{
+     await expect(()=>
+      sut.update({
+        userId:randomUUID(),
+        recipeId:randomUUID(),
+        commentId:randomUUID(),
+        data:{
+            comment:"terceiro comentario"
+        }
+      })
+    ).rejects.instanceof(Error)
+   })
+
+})
