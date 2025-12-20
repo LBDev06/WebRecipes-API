@@ -28,6 +28,10 @@ export class DeleteCommentUseCase {
 
     const recipe = await this.recipeRepository.findById(recipeId)
 
+    if(recipe?.userId !== user.id){
+        throw new Error("User unauthorized.")
+    }
+
     if(!recipe){
         throw new Error("Recipe not found.")
     }
