@@ -21,7 +21,8 @@ export async function register(req: FastifyRequest, reply: FastifyReply){
             password
         })
        
-    return reply.status(201).send({user})
+        const { password: _, ...registerUser } = user.user
+        return reply.status(201).send({registerUser})
 
     } catch (error) {
         if(error instanceof UserAlreadyExistsError){

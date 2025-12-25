@@ -16,7 +16,10 @@ export async function selectedRecipe(req: FastifyRequest, reply: FastifyReply){
         id
     })
 
-    return reply.status(200).send(recipe)
+    const { userId: _, ...selectedRecipeByUser } = recipe
+
+    return reply.status(200).send(selectedRecipeByUser)
+
   } catch (error) {
     return reply.status(404).send(error)
   }
