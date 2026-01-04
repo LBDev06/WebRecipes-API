@@ -2,11 +2,11 @@ import { Recipes } from "generated/prisma/client";
 import { Prisma } from "generated/prisma/client";
 import { RecipeRepository } from "../recipe-repository";
 import { RecipesCreateInput } from "generated/prisma/models";
-
+import { Like } from "generated/prisma/client";
 
 export class InMemoryRecipeRepository implements RecipeRepository {
   public recipes: Recipes[] = []
-
+   public likes: Like[] = []
   
   async create(data: RecipesCreateInput): Promise<Recipes>{
     const recipe: Recipes = {
@@ -18,7 +18,7 @@ export class InMemoryRecipeRepository implements RecipeRepository {
       servings:data.servings,
       ingredients:data.ingredients as string[],
       cook_instructions:data.cook_instructions as string [],
-      userId:data.user.connect?.id as string
+      userId:data.user.connect?.id as string,
     }
 
     this.recipes.push(recipe)
@@ -77,5 +77,15 @@ async findManyByUser(userId: string): Promise<Recipes[]> {
   const recipesByUser = this.recipes.filter(recipes=> recipes.userId === userId)
 
   return recipesByUser
+}
+
+async findManyRecipesByLike(userId: string): Promise<Recipes[]> {
+     const likedRecipeIds = this.likes
+    .filter(like => like.userId === userId)
+    .map(like => like.recipesId)
+
+  return this.recipes.filter(recipe =>
+    likedRecipeIds.includes(recipe.id)
+  )
 }
 }

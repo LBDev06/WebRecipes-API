@@ -7,6 +7,7 @@ import { recipesDashboard } from "../controllers/recipe/recipes-dashboard";
 import { selectedRecipe } from "../controllers/recipe/selected-recipe";
 import { userRecipes } from "../controllers/recipe/user-recipes";
 import { loginRequired } from "../middleware/login-required";
+import { likedRecipesByUser } from "../controllers/recipe/liked-recipes-by-user";
 
 export function recipeRoutes(app: FastifyInstance){
    app.post('/recipes/create', {onRequest: [verifyJwt, loginRequired]}, createRecipe)
@@ -15,4 +16,5 @@ export function recipeRoutes(app: FastifyInstance){
    app.get('/recipes/recipes-dashboard', recipesDashboard)
    app.get('/recipes/:id/selected', selectedRecipe)
    app.get('/recipes/dashboard/user-recipes', {onRequest: [verifyJwt, loginRequired]}, userRecipes)
+   app.get('/recipes/liked-recipes-by-user', {onRequest: [verifyJwt, loginRequired]}, likedRecipesByUser)
 }

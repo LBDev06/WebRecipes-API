@@ -56,4 +56,17 @@ export class PrismaRecipeRepository implements RecipeRepository {
 
     return recipe
   }
+
+  async findManyRecipesByLike(userId: string): Promise<Recipes[]> {
+    const recipes = await prisma.recipes.findMany({
+    where:{
+      likes:{
+        some:{
+          userId
+        }
+      }
+    }
+    })
+    return recipes
+  }
 }
