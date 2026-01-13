@@ -22,14 +22,12 @@ describe('Delete Recipe Use Case.', ()=>{
         it('should be able to delete a recipe.', async()=>{
     
           const user = await usersRepository.create({
-                id:randomUUID(),
                 name:'Alex',
                 email:'exampleOne@gmail.com',
                 password:'2597252'
             })
     
            const recipe = await recipeRepository.create({
-               id: randomUUID(),
                recipe_title: 'teste',
                description: 'descricao',
                recipe_image: 'imagem da receita',
@@ -49,22 +47,13 @@ describe('Delete Recipe Use Case.', ()=>{
                    "Leve ao forno preaquecido a 180°C por cerca de 40 minutos.",
                    "Prepare a cobertura de chocolate e jogue por cima."
                ],
-               user: {
-                connect:{
-                    id:user.id
-                }
-               }
+               userId:user.id
     
            })
 
            const like = await likeRepository.create({
-             id:randomUUID(),
-             user:{
-                  connect:{id:user.id}
-              },
-              recipes:{
-                connect:{id:recipe.id}
-              }         
+             userId:user.id,
+             recipesId:recipe.id
               })
             
            const deleted = await sut.delete({

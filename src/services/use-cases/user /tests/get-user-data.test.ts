@@ -1,8 +1,8 @@
 import { InMemoryUserRepository } from "../../../../repositories/in-memory-repository/in-memory-user-repository";
-import { hashSync } from "bcryptjs";
 import { randomUUID } from "crypto";
 import { GetUserDataUseCase } from "../get-user-data";
 import { describe, beforeEach, it, expect} from "vitest";
+import { hash } from "bcryptjs";
 
 let usersRepository: InMemoryUserRepository
 let sut: GetUserDataUseCase
@@ -17,10 +17,9 @@ describe(('Get User Data Use Case'), ()=>{
 
    it('should be able to get user data', async()=>{
     const createUser =  await usersRepository.create({
-               id: randomUUID(),
                name: "John Doe",
                email: "johndoe@example.com",
-               password: String(hashSync('hassadasdahdaSenha123', 6)),
+               password: String(hash('sdadasda', 6)),
              })
     
     const { user } = await sut.execute({

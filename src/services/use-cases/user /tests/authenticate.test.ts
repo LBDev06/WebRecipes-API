@@ -1,4 +1,3 @@
-import { UserAlreadyExistsError } from "../../../errors/user-alreadyy-exists-erros";
 import { InMemoryUserRepository } from "../../../../repositories/in-memory-repository/in-memory-user-repository";
 import { describe, expect, it, beforeEach } from "vitest";
 import { hashSync } from "bcryptjs";
@@ -31,6 +30,7 @@ describe('Register Use Case', ()=>{
 
     it('should not be able to authenticate with wrong email.', async()=>{
         await usersRepository.create({
+        name: "John Doe",
         email: "johndoe@example.com",
         password: String(hashSync('hassadasdahdaSenha123', 6)),
         })

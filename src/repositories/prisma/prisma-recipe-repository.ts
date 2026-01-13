@@ -38,11 +38,21 @@ export class PrismaRecipeRepository implements RecipeRepository {
   async update(data: UpdateRecipeDTO): Promise<Recipes> {
       const recipe = await db.recipes.update({
         where:{
-            userId:data.userId,
+            user:{
+              is:{
+                id:data.userId
+              }
+            },
             id: data.recipeId
         },
         data:{
-            ...data,
+       recipe_title: data.data.recipe_title,
+       description: data.data.description,
+       recipe_image: data.data.recipe_image,
+       servings: data.data.servings,
+       ingredients: data.data.ingredients,
+       cook_instructions: data.data.cook_instructions,
+       cook_time: data.data.cook_time,
         }
       })
 

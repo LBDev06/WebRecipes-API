@@ -57,10 +57,10 @@ async update(data: UpdateRecipeDTO): Promise<Recipes> {
 
   const current = this.recipes[recipeIndex];
 
-  const updated = {
+  const updated : Recipes = {
     ...current,
-    ...data,
-  } as Recipes;
+     ...data.data
+  } 
 
   this.recipes[recipeIndex] = updated;
 

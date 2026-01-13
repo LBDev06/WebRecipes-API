@@ -6,7 +6,7 @@ import { Recipes } from "@/domain/entities/recipes";
 interface EditUseCaseRequest {
   userId:            string;
   recipeId:          string;
-  data:              UpdateRecipeDTO
+  data:              UpdateRecipeDTO['data']
 }
 
 interface EditUseCaseResponse {

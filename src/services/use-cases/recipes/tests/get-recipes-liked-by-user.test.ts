@@ -10,10 +10,11 @@ describe('Get Liked Recipes By User.', () => {
   })
 
   it('should return recipes liked by user', async () => {
-    const userId = randomUUID()
+    const user = {
+      id: randomUUID()
+    }
 
     const recipe = await recipeRepository.create({
-      id:randomUUID(),
       recipe_title: 'Bolo',
       description: 'descricao',
       recipe_image: 'img',
@@ -21,18 +22,16 @@ describe('Get Liked Recipes By User.', () => {
       servings: '4',
       ingredients: [],
       cook_instructions: [],
-      user: {
-        connect: { id: userId }
-      }
+      userId: user.id
     })
 
     recipeRepository.likes.push({
-        userId,
+        userId: user.id,
         recipesId: recipe.id,
         id: randomUUID()
     })
 
-    const result = await recipeRepository.findManyRecipesByLike(userId)
+    const result = await recipeRepository.findManyRecipesByLike({userId: user.id})
 
     expect(result).toHaveLength(1)
     expect(result[0].id).toBe(recipe.id)

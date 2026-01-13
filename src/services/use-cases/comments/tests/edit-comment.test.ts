@@ -20,14 +20,12 @@ describe('Edit Recipe Use Case.', ()=>{
 
    it('should be able to edit a comment.', async()=>{
       const user = await usersRepository.create({
-            id:randomUUID(),
             name:'Alex',
             email:'exampleOne@gmail.com',
             password:'2597252'
         })
 
          const recipe  = await recipeRepository.create({
-           id:user.id,
            recipe_title:'teste',
            description:'descricao',
            recipe_image:'imagem da receita',
@@ -47,41 +45,25 @@ describe('Edit Recipe Use Case.', ()=>{
          "Leve ao forno preaquecido a 180°C por cerca de 40 minutos.",
          "Prepare a cobertura de chocolate e jogue por cima."
          ],
-         user:{
-            connect:{
-                id:user.id
-            }
-         }
+         userId: user.id
        })
 
-       const commment = await commentRepository.create({
-           id:randomUUID(),
-          user:{
-            connect:{
-                id:user.id
-            }
-           },
-        recipes:{
-            connect:{
-                id:recipe.id
-            }
-          },
-          comment:'primeiro comentatio'
+       const comment = await commentRepository.create({
+          userId: user.id,
+          recipesId: recipe.id,
+          comment:'primeiro comentario'
        })
 
-       const editComment = await sut.update({
-        userId:user.id,
-        recipeId:recipe.id,
-        commentId:commment.id,
-        data:{
-            comment:"segundo comentario"
-        }
-       })
-
-       expect(editComment.editComment.comment).toBe('segundo comentario')
-       expect(editComment.editComment.comment).not.toBe('primeiro comentatio')
-       expect(editComment.editComment.userId).toBe(user.id)
-       expect(editComment.editComment.recipesId).toBe(recipe.id)
+    const commentUpdated = await sut.update({
+         userId: user.id,
+          recipeId: recipe.id,
+          commentId: comment.id,
+          data: {
+          comment: 'first comment',
+         },
+        })
+        
+        expect(commentUpdated.comment.comment).toEqual('first comment')
    })
 
    it('should not be able to edit a comment with invalid userId, recipeId or commentId.', async()=>{

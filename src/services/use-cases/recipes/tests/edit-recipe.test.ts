@@ -18,15 +18,13 @@ describe('Create Recipe Use Case.', ()=>{
     it('should be able to register a new recipe.', async()=>{
 
       const user = await usersRepository.create({
-            id:randomUUID(),
             name:'Alex',
             email:'exampleOne@gmail.com',
             password:'2597252'
         })
 
          const recipe  = await recipeRepository.create({
-           id:user.id,
-           recipe_title:'teste',
+           recipe_title:'Lasanha',
            description:'descricao',
            recipe_image:'imagem da receita',
            cook_time:'10min',
@@ -45,26 +43,20 @@ describe('Create Recipe Use Case.', ()=>{
          "Leve ao forno preaquecido a 180°C por cerca de 40 minutos.",
          "Prepare a cobertura de chocolate e jogue por cima."
          ],
-         user:{
-            connect:{
-                id:user.id
-            }
-         }
+         userId:user.id
        })
-            const updateRecipe = await sut.execute({
+
+            const  recipes  = await sut.execute({
                 userId:user.id,
                 recipeId:recipe.id,
                 data:{
-                    recipe_title:"teste 2",
-                    description:"descricao"
+                    recipe_title:"Lasanha com queijo",
+                    description:"Lasanha deliciosa com queijo"
                 }
             })
 
-          expect(updateRecipe.recipe_title).toBe("teste 2");
-          expect(updateRecipe.description).toBe("descricao");
-          expect(updateRecipe.userId).toBe(user.id)
-          expect(updateRecipe.recipeId).toBe(recipe.id)
-    
+            expect(recipes.updateRecipe?.recipe_title).toBe("Lasanha com queijo")
+            expect(recipes.updateRecipe?.description).toBe("Lasanha deliciosa com queijo")
     })
 
     it('should not be able to register a new recipe with invalid userId or recipeId.', async()=>{

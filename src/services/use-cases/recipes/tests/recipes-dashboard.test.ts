@@ -19,7 +19,6 @@ describe('Recipes Dashboard Use Case.', ()=>{
       }
 
         await recipeRepository.create({
-           id:user.id,
            recipe_title:'teste',
            description:'descricao',
            recipe_image:'imagem da receita',
@@ -39,11 +38,7 @@ describe('Recipes Dashboard Use Case.', ()=>{
          "Leve ao forno preaquecido a 180°C por cerca de 40 minutos.",
          "Prepare a cobertura de chocolate e jogue por cima."
          ],
-         user:{
-            connect:{
-                id:user.id
-            }
-         }
+         userId: user.id
        })
           
        const dashboard = await sut.execute()

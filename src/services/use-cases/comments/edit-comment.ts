@@ -8,11 +8,11 @@ interface EditCommentUseCaseRequest {
   userId:    string;
   recipeId:  string;
   commentId: string;
-  data:      UpdateCommentDTO
+  data:      UpdateCommentDTO['data']
 }
 
 interface EditCommentUseCaseResponse {
-  updatedComment: Comment
+  comment : Comment
 }
 
 export class EditCommentUseCase {
@@ -50,15 +50,15 @@ export class EditCommentUseCase {
         throw new Error("User unauthorized.")
       }
 
-      const updatedComment = await this.commentRepository.update({
+      const comment = await this.commentRepository.update({
         userId: userId, 
         recipesId: recipeId, 
         commentId: commentId,
-        data:data.data
+        data:data
       })
 
       return {
-        updatedComment
+        comment
       }
     }
 }

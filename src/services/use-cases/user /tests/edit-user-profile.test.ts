@@ -3,7 +3,6 @@ import { describe,it, beforeEach, expect } from "vitest";
 import { EditUserProfileUseCase } from "../edit-user-profile";
 import { InMemoryUserProfileRepository } from "../../../../repositories/in-memory-repository/in-memory-user-profile-repository";
 import { hashSync } from "bcryptjs";
-import { randomUUID } from "crypto";
 import { ResourceNotFoundError } from "../../../errors/resource-not-found-error";
 
 let usersRepository: InMemoryUserRepository
@@ -20,20 +19,18 @@ describe('Register Use Case', ()=>{
 
     it('should be able to edit a user profile', async()=>{
       const user =  await usersRepository.create({
-           id: randomUUID(),
            name: "John Doe",
            email: "johndoe@example.com",
            password: String(hashSync('hassadasdahdaSenha123', 6)),
          })
 
         const initialProfile = await userProfileRepository.create({
-            id:user.id,
             bio: "Apaixonado por criar receitas.",
             location: "Desconhecido",
             experience_level: "iniciante",
             favorite_ingredient: "sal",
             cooking_specialities: "fritar ovo",
-            user: { connect: { id: user.id } },
+            userId: user.id
            });
 
         const { userProfile } = await sut.execute(({
@@ -51,10 +48,9 @@ describe('Register Use Case', ()=>{
     it('should not be able to create a user profile with invalid user id', async()=>{
        
        await usersRepository.create({
-           id: randomUUID(),
            name: "John Doe",
            email: "johndoe@example.com",
-           password: String(hashSync('hassadasdahdaSenha123', 6)),
+           password: "asasasas",
        })
 
        await expect(sut.execute({

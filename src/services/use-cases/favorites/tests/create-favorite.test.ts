@@ -21,14 +21,12 @@ describe('Create Recipe Use Case.', ()=>{
     it('should be able add the recipe to favorites.', async()=>{
 
          const user = await usersRepository.create({
-              id:randomUUID(),
               name:'Alex',
               email:'exampleOne@gmail.com',
              password:'2597252'
          })
         
          const recipe  = await recipeRepository.create({
-           id:user.id,
            recipe_title:'teste',
            description:'descricao',
            recipe_image:'imagem da receita',
@@ -48,11 +46,7 @@ describe('Create Recipe Use Case.', ()=>{
          "Leve ao forno preaquecido a 180°C por cerca de 40 minutos.",
          "Prepare a cobertura de chocolate e jogue por cima."
          ],
-         user:{
-            connect:{
-                id:user.id
-            }
-         }
+         userId: user.id
        })
 
        const createLike = await sut.create({

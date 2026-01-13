@@ -18,15 +18,12 @@ describe('Get User Recipes Use Case.', ()=>{
     it('should be able to return a list of recipes.', async()=>{
 
          const user = await usersRepository.create({
-            id:randomUUID(),
             name:'Alex',
             email:'exampleOne@gmail.com',
             password:'2597252'
           })
        
-
         await recipeRepository.create({
-           id:user.id,
            recipe_title:'teste',
            description:'descricao',
            recipe_image:'imagem da receita',
@@ -46,11 +43,7 @@ describe('Get User Recipes Use Case.', ()=>{
          "Leve ao forno preaquecido a 180°C por cerca de 40 minutos.",
          "Prepare a cobertura de chocolate e jogue por cima."
          ],
-         user:{
-            connect:{
-                id:user.id
-            }
-         }
+         userId: user.id
        })
           
        const recipeByUser = await sut.execute({

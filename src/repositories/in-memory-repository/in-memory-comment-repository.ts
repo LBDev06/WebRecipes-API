@@ -43,10 +43,10 @@ export class InMemoryCommentRepository implements CommentRepository {
         
           const current = this.comments[commentIndex];
         
-          const updated = {
+          const updated : Comment = {
             ...current,
-            ...data,
-          } as Comment;
+            comment: data.data.comment
+          } 
         
           this.comments[commentIndex] = updated;
         
