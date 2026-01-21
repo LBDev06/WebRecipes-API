@@ -1,3 +1,4 @@
 export interface FindLikeByIdDTO {
-    id: string
+    userId: string;
+    recipesId: string;
 }

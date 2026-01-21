@@ -1,5 +1,4 @@
 import { Favorite } from "@/domain/entities/favorite";
-import { randomUUID } from "crypto";
 import { FavoriteRepository } from "../favorite-repository";
 import { CreateFavoriteDTO } from "@/domain/dtos/favorite/create-favorite";
 import { DeleteFavoriteDTO } from "@/domain/dtos/favorite/delete-favorite-dto";
@@ -10,7 +9,6 @@ export class InMemoryFavoriteRepository implements FavoriteRepository  {
 
     async create(data: CreateFavoriteDTO): Promise<Favorite> {
         const favorite : Favorite = {
-            id: randomUUID(),
             userId: data.userId,
             recipesId: data.recipesId,
         }
@@ -20,7 +18,7 @@ export class InMemoryFavoriteRepository implements FavoriteRepository  {
     }
     
     async delete(data: DeleteFavoriteDTO): Promise<void> {
-        const like = this.favorites.findIndex(like=> like.id === data.id)
+        const like = this.favorites.findIndex(like=> like.userId && like.userId === data.userId && like.recipesId)
 
        if (like === -1) {
        throw new Error('Recipe not found');
@@ -28,8 +26,8 @@ export class InMemoryFavoriteRepository implements FavoriteRepository  {
         this.favorites.splice(like, 1)[0];
     }
 
-    async findById(id: FindFavoriteByIdDTO): Promise<Favorite | null> {
-        const favorite = this.favorites.find(like=> like.id === id.id)
+    async findById(data: FindFavoriteByIdDTO): Promise<Favorite | null> {
+        const favorite = this.favorites.find(like=> like.userId && like.userId === data.userId && like.recipesId)
 
         if(!favorite){
           throw new Error('Recipe not found')

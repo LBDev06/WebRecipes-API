@@ -7,5 +7,5 @@ import { loginRequired } from "../middleware/login-required";
 
 export function likeRoutes(app: FastifyInstance){
     app.post('/recipes/:recipeId/like', {onRequest: [verifyJwt, loginRequired]}, likeRecipe)
-    app.delete('/recipes/:likeId/:recipeId/unlike', {onRequest: [verifyJwt, loginRequired]}, unlikeRecipe)
+    app.delete('/recipes/:recipesId/unlike', {onRequest: [verifyJwt, loginRequired]}, unlikeRecipe)
 }

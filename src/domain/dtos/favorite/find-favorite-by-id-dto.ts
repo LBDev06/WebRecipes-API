@@ -1,3 +1,4 @@
 export interface FindFavoriteByIdDTO {
-  id: string;
+  userId: string;
+  recipesId: string;
 }

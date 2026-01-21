@@ -9,7 +9,10 @@ export class PrismaFavoriteRepository implements FavoriteRepository {
 
   async create(data: CreateFavoriteDTO): Promise<Favorite> {
       const like = await db.favorite.create({
-        data
+        data:{
+          userId: data.userId,
+          recipesId: data.recipesId
+        }
       })
       return like
   }
@@ -17,17 +20,26 @@ export class PrismaFavoriteRepository implements FavoriteRepository {
   async delete(data: DeleteFavoriteDTO): Promise<void> {
     await db.favorite.delete({
         where:{
-          id:data.id
+          userId_recipesId:{
+            userId:data.userId,
+            recipesId:data.recipesId
+          }
         }
       })
   }
 
-  async findById(id: FindFavoriteByIdDTO): Promise<Favorite | null> {
+  async findById(data: FindFavoriteByIdDTO): Promise<Favorite | null> {
     const favorite = await db.favorite.findUnique({
       where:{
-        id: id.id
+       userId_recipesId:{
+        userId: data.userId,
+        recipesId: data.recipesId
+       }
       },
-
+      include:{
+        user:true,
+        recipes:true
+      }
     })
 
     return favorite

@@ -8,20 +8,22 @@ export async function favoriteRecipe(req: FastifyRequest, reply: FastifyReply){
     const userIdSchema = z.string().uuid()
     
     const recipeIdSchema = z.object({
-        recipeId: z.string().uuid()
+        recipesId: z.string().uuid()
     })
 
    const userId = userIdSchema.parse(req.userId)
-   const { recipeId } = recipeIdSchema.parse(req.params)
+   const { recipesId } = recipeIdSchema.parse(req.params)
 
    try {
     const createLikeUseCase = makeCreateFavoriteUseCase()
 
     const favorite = await createLikeUseCase.create({
         userId,
-        recipeId
+        recipesId
     })
-    return reply.status(201).send(favorite)
+    const {userId:__, ...favoriteWithoutUserId} = favorite.favorite
+    
+    return reply.status(201).send(favoriteWithoutUserId)
 
    } catch (error) {
       return reply.status(404).send({message: `${error}`})

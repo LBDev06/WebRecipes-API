@@ -15,7 +15,7 @@ describe('Create Recipe Use Case.', ()=>{
         usersRepository = new InMemoryUserRepository()
         recipeRepository = new InMemoryRecipeRepository()
         likeRepository = new InMemoryLikeRepository()
-        sut = new CreateLikeUseCase(usersRepository, recipeRepository, likeRepository)
+        sut = new CreateLikeUseCase(recipeRepository, likeRepository)
     })
    
     it('should be able to create a like for a recipe.', async()=>{

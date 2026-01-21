@@ -15,9 +15,8 @@ describe('Delete Recipe Use Case.', ()=>{
         usersRepository = new InMemoryUserRepository()
         recipeRepository = new InMemoryRecipeRepository()
         likeRepository = new InMemoryLikeRepository()
-        sut = new DeleteLikeUseCase(usersRepository, recipeRepository, likeRepository)
+        sut = new DeleteLikeUseCase(likeRepository)
     })
-   
        
         it('should be able to delete a recipe.', async()=>{
     
@@ -51,14 +50,13 @@ describe('Delete Recipe Use Case.', ()=>{
     
            })
 
-           const like = await likeRepository.create({
+           await likeRepository.create({
              userId:user.id,
              recipesId:recipe.id
               })
             
            const deleted = await sut.delete({
-              likeId:like.id,
-              recipeId:recipe.id,
+              recipesId:recipe.id,
               userId:user.id
     
            })
@@ -70,8 +68,7 @@ describe('Delete Recipe Use Case.', ()=>{
     
              await expect(()=>
                sut.delete({
-                  likeId:randomUUID(),
-                  recipeId:randomUUID(),
+                  recipesId:randomUUID(),
                   userId:randomUUID()
                })
              ).rejects.toBeInstanceOf(Error)

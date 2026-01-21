@@ -15,7 +15,7 @@ describe('Create Recipe Use Case.', ()=>{
         usersRepository = new InMemoryUserRepository()
         recipeRepository = new InMemoryRecipeRepository()
         favoriteRepository = new InMemoryFavoriteRepository()
-        sut = new CreateFavoriteUseCase(usersRepository, recipeRepository, favoriteRepository)
+        sut = new CreateFavoriteUseCase(recipeRepository, favoriteRepository)
     })
    
     it('should be able add the recipe to favorites.', async()=>{
@@ -51,7 +51,7 @@ describe('Create Recipe Use Case.', ()=>{
 
        const createLike = await sut.create({
         userId:user.id,
-        recipeId:recipe.id
+        recipesId:recipe.id
       })
         
       expect(createLike.favorite.userId).toBe(user.id)
@@ -62,7 +62,7 @@ describe('Create Recipe Use Case.', ()=>{
         
       await expect(sut.create({
         userId:randomUUID(),
-        recipeId:randomUUID()
+        recipesId:randomUUID()
       })).rejects.toBeInstanceOf(Error)
     })
 

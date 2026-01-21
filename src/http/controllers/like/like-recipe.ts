@@ -20,7 +20,9 @@ export async function likeRecipe(req: FastifyRequest, reply: FastifyReply){
         userId,
         recipeId
     })
-    return reply.status(201).send(like)
+    const {userId:__, ...likeWithoutUserId} = like.like
+    return reply.status(201).send(likeWithoutUserId
+    )
 
    } catch (error) {
       return reply.status(404).send({message: `${error}`})

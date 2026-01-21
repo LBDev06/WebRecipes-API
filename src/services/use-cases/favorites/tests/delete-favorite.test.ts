@@ -15,7 +15,7 @@ describe('Create Recipe Use Case.', ()=>{
         usersRepository = new InMemoryUserRepository()
         recipeRepository = new InMemoryRecipeRepository()
         favoriteRepository = new InMemoryFavoriteRepository()
-        sut = new DeleteFavoriteUseCase(usersRepository, recipeRepository, favoriteRepository)
+        sut = new DeleteFavoriteUseCase(favoriteRepository)
     })
    
     it('should be able to delete favorite from recipe.', async()=>{
@@ -50,14 +50,13 @@ describe('Create Recipe Use Case.', ()=>{
           
                  })
       
-                 const favorite = await favoriteRepository.create({
-                   userId: user.id,
+                  await favoriteRepository.create({
+                    userId: user.id,
                     recipesId: recipe.id       
                 })
                   
                  const deleted = await sut.delete({
-                    favoriteId:favorite.id,
-                    recipeId:recipe.id,
+                    recipesId:recipe.id,
                     userId:user.id
           
                  })
@@ -69,8 +68,7 @@ describe('Create Recipe Use Case.', ()=>{
                      
                       await expect(()=>
                         sut.delete({
-                           favoriteId:randomUUID(),
-                           recipeId:randomUUID(),
+                           recipesId:randomUUID(),
                            userId:randomUUID()
                         })
                       ).rejects.toBeInstanceOf(Error)

@@ -1,12 +1,8 @@
-import { DeleteFavoriteDTO } from "@/domain/dtos/favorite/delete-favorite-dto";
 import { FavoriteRepository } from "@/repositories/favorite-repository";
-import { RecipeRepository } from "@/repositories/recipe-repository";
-import { UsersRepository } from "@/repositories/users-repository";
 
 interface DeleteFavoriteUseCaseRequest {
     userId:    string;
-    recipeId:  string;
-    favoriteId:    string;
+    recipesId:  string;
 }
 
 interface DeleteFavoriteUseCaseResponse {
@@ -15,39 +11,26 @@ interface DeleteFavoriteUseCaseResponse {
 
 export class DeleteFavoriteUseCase{
     constructor(
-    private  usersRepository: UsersRepository,
-    private  recipeRepository: RecipeRepository,
     private  favoriteRepository: FavoriteRepository
     ){}
 
     async delete({
       userId,
-      recipeId,
-      favoriteId
+      recipesId,
     }: DeleteFavoriteUseCaseRequest): Promise<DeleteFavoriteUseCaseResponse>{
       
-      const user = await this.usersRepository.findById({id: userId})
-
-      if(!user){
-        throw new Error('User not found.')
-      }
-
-      const recipe = await this.recipeRepository.findById({id: recipeId})
-      
-      if(!recipe){
-        throw new Error(`${recipeId} Recipe not found.`)
-      }
-
-      const favorite = await this.favoriteRepository.findById({id: favoriteId})
-
-      if(!favorite){
-        throw new Error(`${favoriteId} Favorite not found.`)
-      }
-      
-      const deleteFavorite = await this.favoriteRepository.delete({
+      const isExitingFavorite= await this.favoriteRepository.findById({
         userId:userId,
-        id:favoriteId,
-        recipesId:recipeId
+        recipesId:recipesId
+      })
+       
+      if(!isExitingFavorite){
+        throw new Error(`favorite not found ${userId} -  ${recipesId}`)
+      }
+
+      const deleteFavorite = await this.favoriteRepository.delete({
+        userId,
+        recipesId
       })
 
       return {

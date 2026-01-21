@@ -1,6 +1,5 @@
 import { LikeRepository } from "@/repositories/like-repository";
 import { RecipeRepository } from "@/repositories/recipe-repository";
-import { UsersRepository } from "@/repositories/users-repository";
 import { Like } from "@/domain/entities/like";
 
 interface CreateLikeUseCaseRequest {
@@ -14,7 +13,6 @@ interface CreateLikeUseCaseResponse {
 
 export class CreateLikeUseCase{
     constructor(
-    private  usersRepository: UsersRepository,
     private  recipeRepository: RecipeRepository,
     private  likeRepository: LikeRepository
     ){}
@@ -23,12 +21,6 @@ export class CreateLikeUseCase{
       userId,
       recipeId
     }: CreateLikeUseCaseRequest): Promise<CreateLikeUseCaseResponse>{
-      
-      const user = await this.usersRepository.findById({id: userId})
-
-      if(!user){
-        throw new Error('User not found.')
-      }
       
       const recipe = await this.recipeRepository.findById({id: recipeId})
 

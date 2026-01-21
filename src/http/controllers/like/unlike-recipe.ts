@@ -7,24 +7,18 @@ export async function unlikeRecipe(req: FastifyRequest, reply: FastifyReply){
   const userIdSchema = z.string().uuid()
 
   const recipeIdSchema = z.object({
-    recipeId: z.string().uuid()
-  })
-
-  const likeIdSchema = z.object({
-    likeId: z.string().uuid()
+    recipesId: z.string().uuid()
   })
 
   const  userId  = userIdSchema.parse(req.userId)
-  const { recipeId } =recipeIdSchema.parse(req.params)
-  const { likeId } = likeIdSchema.parse(req.params)
+  const { recipesId } = recipeIdSchema.parse(req.params)
 
   try {
     const deleteLikeUseCase = makeDeleteLikeUseCase()
 
     await deleteLikeUseCase.delete({
-        likeId,
         userId,
-        recipeId
+        recipesId
     })
 
     reply.status(200).send({message:'Like deleted'})

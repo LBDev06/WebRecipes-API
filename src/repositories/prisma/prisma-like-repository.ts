@@ -9,21 +9,32 @@ export class PrismaLikeRepository implements LikeRepository {
 
   async create(data: CreateLikeDTO): Promise<Like> {
       const like = await db.like.create({
-        data
+        data:{
+          userId: data.userId,
+          recipesId: data.recipesId
+        }
       })
       return like
   }
 
   async delete(data: DeleteLikeDTO): Promise<void> {
       await db.like.delete({
-        where:data
+        where:{
+          userId_recipesId:{
+            userId:data.userId,
+            recipesId:data.recipesId
+          }
+        }
       })
   }
 
-  async findById(id: FindLikeByIdDTO): Promise<Like | null> {
+  async findById(data: FindLikeByIdDTO): Promise<Like | null> {
     const like = await db.like.findUnique({
       where:{
-        id: id.id
+        userId_recipesId:{
+          userId:data.userId,
+          recipesId:data.recipesId
+        }
       },
       include:{
         user:true,
