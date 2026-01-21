@@ -18,6 +18,6 @@ export async function favoriteRecipesByUser(req: FastifyRequest, reply: FastifyR
      recipes.map( ({ userId, ...rest }) => rest )
     )
   } catch (error) {
-    
+    return reply.status(404).send(error)
   }
 }

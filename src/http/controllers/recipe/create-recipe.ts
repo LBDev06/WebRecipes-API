@@ -41,8 +41,8 @@ import { ResourceNotFoundError } from "@/services/errors/resource-not-found-erro
                     ingredients,
                     cook_instructions,
                 })
-
-                return reply.status(201).send(recipe)
+                const {userId:__, ...recipeWithoutUserId} = recipe.recipe
+                return reply.status(201).send(recipeWithoutUserId)
              } catch (error) {
                 if(error instanceof ResourceNotFoundError){
                     reply.status(404).send({message: `${error}`})
