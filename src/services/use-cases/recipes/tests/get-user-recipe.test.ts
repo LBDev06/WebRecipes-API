@@ -12,7 +12,7 @@ describe('Get User Recipes Use Case.', ()=>{
     beforeEach(()=>{
         usersRepository = new InMemoryUserRepository()
         recipeRepository = new InMemoryRecipeRepository()
-        sut = new GetUserRecipesUseCase(usersRepository ,recipeRepository)
+        sut = new GetUserRecipesUseCase(recipeRepository)
     })
    
     it('should be able to return a list of recipes.', async()=>{
@@ -54,12 +54,11 @@ describe('Get User Recipes Use Case.', ()=>{
        expect(recipeByUser.recipes).toEqual(expect.any(Array))
     })
 
-    it('should not be able to return a user recipes list with invalid userId.', async()=>{
-        await expect(
-            sut.execute({
-                userId:randomUUID()
-            })
-        ).rejects.instanceOf(Error)
+    it('should return an empty list with invalid userId.', async()=>{
+        const { recipes } = await sut.execute({
+            userId:randomUUID()
+        })
+        expect(recipes).toHaveLength(0)
     })
 
 })

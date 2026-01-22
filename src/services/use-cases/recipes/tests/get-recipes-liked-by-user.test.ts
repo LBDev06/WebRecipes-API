@@ -28,7 +28,6 @@ describe('Get Liked Recipes By User.', () => {
     recipeRepository.likes.push({
         userId: user.id,
         recipesId: recipe.id,
-        id: randomUUID()
     })
 
     const result = await recipeRepository.findManyRecipesByLike({userId: user.id})

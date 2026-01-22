@@ -1,5 +1,4 @@
 import { RecipeRepository } from "@/repositories/recipe-repository";
-import { UsersRepository } from "@/repositories/users-repository";
 import { Recipes } from "generated/prisma/browser";
 
 interface RecipeUseCaseRequest {
@@ -20,7 +19,6 @@ interface RecipeUseCaseResponse {
 export class CreateRecipeUseCase{
     constructor(
     private  recipeRepository: RecipeRepository,
-    private  usersRepository: UsersRepository
     ){}
 
     async create({
@@ -34,12 +32,6 @@ export class CreateRecipeUseCase{
     cook_instructions,
     }: RecipeUseCaseRequest): Promise<RecipeUseCaseResponse>{
       
-      const user = await this.usersRepository.findById({id: id})
-
-      if(!user){
-        throw new Error('User not found')
-      }
-
       const recipe = await this.recipeRepository.create({
         recipe_title,
         description,
@@ -48,7 +40,7 @@ export class CreateRecipeUseCase{
         servings,
         ingredients,
         cook_instructions,
-        userId: user.id
+        userId: id
       })
      
       return {

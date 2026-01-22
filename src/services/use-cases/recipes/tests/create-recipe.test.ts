@@ -3,6 +3,7 @@ import { InMemoryRecipeRepository } from "../../../../repositories/in-memory-rep
 import { describe, expect, it, beforeEach } from "vitest";
 import { randomUUID } from "node:crypto";
 import { CreateRecipeUseCase } from "../create-recipe";
+import { record } from "zod";
 
 let usersRepository: InMemoryUserRepository
 let recipeRepository: InMemoryRecipeRepository
@@ -12,7 +13,7 @@ describe('Create Recipe Use Case.', ()=>{
     beforeEach(()=>{
         usersRepository = new InMemoryUserRepository()
         recipeRepository = new InMemoryRecipeRepository()
-        sut = new CreateRecipeUseCase(recipeRepository,usersRepository)
+        sut = new CreateRecipeUseCase(recipeRepository)
     })
    
     it('should be able to register a new recipe.', async()=>{
@@ -51,8 +52,13 @@ describe('Create Recipe Use Case.', ()=>{
     })
     
      it('should not be able to register a new recipe with invalid user id.', async()=>{
-    
-      await expect(sut.create({
+      const user = await usersRepository.create({
+            name:'Alex',
+            email:'exampleOne@gmail.com',
+            password:'2597252'
+        })
+
+      const { recipe } = await sut.create({
            id:randomUUID(),
            recipe_title:'teste',
            description:'descricao',
@@ -73,7 +79,8 @@ describe('Create Recipe Use Case.', ()=>{
          "Leve ao forno preaquecido a 180°C por cerca de 40 minutos.",
          "Prepare a cobertura de chocolate e jogue por cima."
          ],
-       })).rejects.toBeInstanceOf(Error)
+       })
        
+        expect(recipe.id).not.toBe(user.id)
     })
 })

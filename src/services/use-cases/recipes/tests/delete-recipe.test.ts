@@ -12,7 +12,7 @@ describe('Create Recipe Use Case.', ()=>{
     beforeEach(()=>{
         usersRepository = new InMemoryUserRepository()
         recipeRepository = new InMemoryRecipeRepository()
-        sut = new DeleteRecipeUseCase(recipeRepository,usersRepository)
+        sut = new DeleteRecipeUseCase(recipeRepository)
     })
    
     it('should be able to delete a recipe.', async()=>{

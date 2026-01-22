@@ -12,7 +12,7 @@ describe('Create Recipe Use Case.', ()=>{
     beforeEach(()=>{
         usersRepository = new InMemoryUserRepository()
         recipeRepository = new InMemoryRecipeRepository()
-        sut = new EditRecipeUseCase(recipeRepository,usersRepository)
+        sut = new EditRecipeUseCase(recipeRepository)
     })
    
     it('should be able to register a new recipe.', async()=>{
