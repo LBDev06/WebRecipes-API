@@ -1,6 +1,8 @@
 import { RecipeRepository } from "@/repositories/recipe-repository";
 import { UpdateRecipeDTO } from "@/domain/dtos/recipes/update-recipe-dto";
 import { Recipes } from "@/domain/entities/recipes";
+import { ResourceNotFoundError } from "../../errors/resource-not-found-error";
+import { NotAllowedError } from "../../errors/not-allowed-error";
 
 interface EditUseCaseRequest {
   userId:            string;
@@ -27,10 +29,10 @@ export class EditRecipeUseCase{
       const recipe = await this.recipeRepository.findById({id: recipeId})
 
       if(!recipe){
-        throw new Error('Recipe not found')
+        throw new ResourceNotFoundError()
       }
         if(recipe.userId !== userId){
-        throw new Error('User not authorized')
+        throw new NotAllowedError()
       }
 
       const updateRecipe = await this.recipeRepository.update({userId: userId, recipeId: recipeId, data: data})

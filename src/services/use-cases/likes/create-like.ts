@@ -1,6 +1,7 @@
 import { LikeRepository } from "@/repositories/like-repository";
 import { RecipeRepository } from "@/repositories/recipe-repository";
 import { Like } from "@/domain/entities/like";
+import { ResourceNotFoundError } from "../../errors/resource-not-found-error";
 
 interface CreateLikeUseCaseRequest {
     userId:    string;
@@ -25,7 +26,7 @@ export class CreateLikeUseCase{
       const recipe = await this.recipeRepository.findById({id: recipeId})
 
       if(!recipe){
-        throw new Error('Recipe not found.')
+        throw new ResourceNotFoundError()
       }
 
       const like = await this.likeRepository.create({

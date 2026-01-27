@@ -1,6 +1,7 @@
 import { RecipeRepository } from "@/repositories/recipe-repository";
 import { CommentRepository } from "@/repositories/comment-repository";
 import { Comment } from "@/domain/entities/comment";
+import { ResourceNotFoundError } from "../../errors/resource-not-found-error";
 
 interface CreateCommentUseCaseRequest {
     userId:   string;
@@ -27,7 +28,7 @@ export class CreateCommentUseCase {
         const recipe = await this.recipeRepository.findById({id: recipeId})
 
         if(!recipe){
-            throw new Error('Recipe not found.')
+            throw new ResourceNotFoundError()
         }
 
      const createComment = await this.commentRepository.create({

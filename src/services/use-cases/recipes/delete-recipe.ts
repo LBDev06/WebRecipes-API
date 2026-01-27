@@ -1,4 +1,6 @@
 import { RecipeRepository } from "@/repositories/recipe-repository";
+import { NotAllowedError } from "../../errors/not-allowed-error";
+import { ResourceNotFoundError } from "../../errors/resource-not-found-error";
 
 interface DeleteRecipeUseCaseRequest {
   userId:   string;
@@ -22,11 +24,11 @@ export class DeleteRecipeUseCase{
       const recipe = await this.recipeRepository.findById({id: recipeId})
 
       if(!recipe){
-        throw new Error('Recipe not found')
+        throw new ResourceNotFoundError()
       }
 
       if(recipe.userId !== userId){
-        throw new Error('User not authorized')
+        throw new NotAllowedError()
       }
 
       const deleteRecipe = await this.recipeRepository.delete({id: recipeId})

@@ -2,6 +2,8 @@ import { UpdateCommentDTO } from "@/domain/dtos/comment/update-comment-dto";
 import { Comment } from "@/domain/entities/comment";
 import { CommentRepository } from "@/repositories/comment-repository";
 import { RecipeRepository } from "@/repositories/recipe-repository";
+import { NotAllowedError } from "../../errors/not-allowed-error";
+import { ResourceNotFoundError } from "../../errors/resource-not-found-error";
 
 interface EditCommentUseCaseRequest {
   userId:    string;
@@ -30,17 +32,17 @@ export class EditCommentUseCase {
        const recipe = await this.recipeRepository.findById({id: recipeId})
 
        if(!recipe){
-        throw new Error("Recipe not found.")
+        throw new ResourceNotFoundError()
        }
 
       const isExistingComment = await this.commentRepository.findById({id: commentId})
       
       if(!isExistingComment){
-        throw new Error("Comment not found.")
+        throw new ResourceNotFoundError()
       }
       
        if(isExistingComment.userId !== userId){
-        throw new Error("User unauthorized.")
+        throw new NotAllowedError()
       }
 
       const comment = await this.commentRepository.update({

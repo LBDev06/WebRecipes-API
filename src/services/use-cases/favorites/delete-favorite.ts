@@ -1,4 +1,5 @@
 import { FavoriteRepository } from "@/repositories/favorite-repository";
+import { ResourceNotFoundError } from "../../errors/resource-not-found-error";
 
 interface DeleteFavoriteUseCaseRequest {
     userId:    string;
@@ -25,7 +26,7 @@ export class DeleteFavoriteUseCase{
       })
        
       if(!isExitingFavorite){
-        throw new Error(`favorite not found ${userId} -  ${recipesId}`)
+        throw new ResourceNotFoundError()
       }
 
       const deleteFavorite = await this.favoriteRepository.delete({

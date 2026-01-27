@@ -1,6 +1,7 @@
 import { FavoriteRepository } from "@/repositories/favorite-repository";
 import { RecipeRepository } from "@/repositories/recipe-repository";
 import { Favorite } from "@/domain/entities/favorite";
+import { ResourceNotFoundError } from "../../errors/resource-not-found-error";
 
 interface CreateFavoriteUseCaseRequest {
     userId:    string;
@@ -25,7 +26,7 @@ export class CreateFavoriteUseCase{
       const recipe = await this.recipeRepository.findById({id: recipesId})
 
       if(!recipe){
-        throw new Error('Recipe not found.')
+        throw new ResourceNotFoundError()
       }
 
       const favorite = await this.favoriteRepository.create({

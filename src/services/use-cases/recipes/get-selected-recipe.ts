@@ -1,5 +1,6 @@
 import { RecipeRepository } from "@/repositories/recipe-repository";
 import { Recipes } from "@/domain/entities/recipes";
+import { ResourceNotFoundError } from "../../errors/resource-not-found-error";
 
 interface GetSelectedRecipeRequest {
     id: string
@@ -20,7 +21,7 @@ export class GetSelectedRecipeUseCase {
         const recipe = await this.recipeRepository.findById({id: id})
 
         if(!recipe){
-            throw new Error('Recipe not found.')
+            throw new ResourceNotFoundError()
         }
 
         return {
