@@ -132,6 +132,44 @@ npm run dev
 
 ---
 
+## 🧪 Testes Unitários
+
+A aplicação conta com **testes unitários focados nos Use Cases**, garantindo que as regras de negócio funcionem corretamente de forma isolada, sem dependência de HTTP, banco de dados real ou frameworks.
+
+### 🎯 O que é testado
+
+* Criação de usuários
+* Criação de receitas
+* Likes e favoritos
+* Comentários e remoção de comentários
+* Regras de validação e erros de negócio
+
+### 🧠 Estratégia de Testes
+
+* Testes escritos com **Vitest**
+* Uso de **repositórios em memória (in-memory)**
+* Nenhum acesso direto ao Prisma ou banco real
+* Foco total na lógica dos **use-cases**
+
+Essa abordagem deixa os testes:
+
+* ⚡ Rápidos
+* 🔒 Confiáveis
+* 🧼 Fáceis de manter
+
+### ▶️ Executando os testes
+
+```bash
+npm run test
+```
+
+Ou em modo watch:
+
+```bash
+npm run test:watch
+```
+---
+
 ## 🐳 Docker
 
 A aplicação utiliza **Docker** para facilitar a configuração do ambiente, especialmente do banco de dados. Atualmente, o Docker é usado para subir o **PostgreSQL**, enquanto a API pode rodar localmente. Também é possível rodar **API + Banco** totalmente via Docker.
