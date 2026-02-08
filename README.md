@@ -31,7 +31,7 @@ Uma API RESTful para uma aplicação de receitas, onde usuários podem criar con
 
 ## 🧱 Estrutura do Projeto
 
-A aplicação segue uma arquitetura bem organizada, separando responsabilidades e facilitando a manutenção e escalabilidade:
+A aplicação segue uma arquitetura bem organizada seguindo os princípios SOLID, separando responsabilidades e facilitando a manutenção e escalabilidade:
 
 ```
 .vscode/
@@ -81,7 +81,7 @@ docker-compose.yml
 * **Fastify**
 * **Prisma ORM**
 * **JWT** para autenticação
-* **PostgreSQL** (ou outro banco compatível com Prisma)
+* **PostgreSQL** 
 
 ---
 
