@@ -1,41 +1,41 @@
 import { LikeRepository } from "@/repositories/like-repository";
-import { ResourceNotFoundError } from "../errors/resource-not-found-error";
+import { ResourceNotFoundError } from "@/errors/resource-not-found-error";
 
 interface DeleteLikeUseCaseRequest {
-    userId:    string;
-    recipesId:  string;
+  userId: string;
+  recipesId: string;
 }
 
 interface DeleteLikeUseCaseResponse {
-    deleteLike: void
-  }
+  deleteLike: void
+}
 
-export class DeleteLikeUseCase{
-    constructor(
-    private  likeRepository: LikeRepository
-    ){}
+export class DeleteLikeUseCase {
+  constructor(
+    private likeRepository: LikeRepository
+  ) { }
 
-    async delete({
-      userId,
-      recipesId,
-    }: DeleteLikeUseCaseRequest): Promise<DeleteLikeUseCaseResponse>{
-      
-      const isExistingLike = await this.likeRepository.findById({
-        userId:userId,
-        recipesId:recipesId
-      })
+  async delete({
+    userId,
+    recipesId,
+  }: DeleteLikeUseCaseRequest): Promise<DeleteLikeUseCaseResponse> {
 
-      if(!isExistingLike){
-        throw new ResourceNotFoundError()
-      }
+    const isExistingLike = await this.likeRepository.findById({
+      userId: userId,
+      recipesId: recipesId
+    })
 
-      const deleteLike = await this.likeRepository.delete({
-        userId:userId,
-        recipesId:recipesId
-      })
-
-      return {
-        deleteLike
-      }
+    if (!isExistingLike) {
+      throw new ResourceNotFoundError()
     }
+
+    const deleteLike = await this.likeRepository.delete({
+      userId: userId,
+      recipesId: recipesId
+    })
+
+    return {
+      deleteLike
+    }
+  }
 }

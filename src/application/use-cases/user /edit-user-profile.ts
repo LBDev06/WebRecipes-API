@@ -1,15 +1,15 @@
 import { UserProfile } from "@/domain/entities/user-profile";
 import { UsersRepository } from "@/repositories/users-repository";
 import { UserProfileRepository } from "@/repositories/user-profile-repository";
-import { ResourceNotFoundError } from "../errors/resource-not-found-error";
+import { ResourceNotFoundError } from "@/errors/resource-not-found-error";
 
 interface EditUserProfileUseCaseRequest {
-  id:                   string;
-  bio:                  string;
-  location:             string;
-  experience_level:     string;  
-  favorite_ingredient:  string;
-  cooking_specialities: string;
+    id: string;
+    bio: string;
+    location: string;
+    experience_level: string;
+    favorite_ingredient: string;
+    cooking_specialities: string;
 
 }
 
@@ -17,34 +17,34 @@ interface EditUserProfileUseCaseResponse {
     userProfile: UserProfile
 }
 
-export class EditUserProfileUseCase{
+export class EditUserProfileUseCase {
     constructor(
-       private usersRepository: UsersRepository,
-       private userProfileRepository: UserProfileRepository
-    ){}
+        private usersRepository: UsersRepository,
+        private userProfileRepository: UserProfileRepository
+    ) { }
 
     async execute({
-    id,
-    bio,
-    location,
-    experience_level,
-    favorite_ingredient,
-    cooking_specialities     
-    }: EditUserProfileUseCaseRequest): Promise<EditUserProfileUseCaseResponse>{
-     
-        const user = await this.usersRepository.findById({id: id})
+        id,
+        bio,
+        location,
+        experience_level,
+        favorite_ingredient,
+        cooking_specialities
+    }: EditUserProfileUseCaseRequest): Promise<EditUserProfileUseCaseResponse> {
 
-        if(!user){
+        const user = await this.usersRepository.findById({ id: id })
+
+        if (!user) {
             throw new ResourceNotFoundError()
         }
 
         const userProfile = await this.userProfileRepository.create({
-           bio,
-           location,
-           experience_level,
-           favorite_ingredient,
-           cooking_specialities,
-           userId: user.id
+            bio,
+            location,
+            experience_level,
+            favorite_ingredient,
+            cooking_specialities,
+            userId: user.id
         })
 
         return {
