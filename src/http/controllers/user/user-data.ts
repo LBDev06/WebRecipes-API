@@ -1,20 +1,20 @@
-import { makeGetUserDataUseCase } from "@/services/factories/make-get-user-data-use-case";
+import { makeGetUserDataUseCase } from "@/main/factories/make-get-user-data-use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 
-export async function userData(req: FastifyRequest, reply: FastifyReply){
+export async function userData(req: FastifyRequest, reply: FastifyReply) {
 
-      const getUserDataUseCase = makeGetUserDataUseCase()
+  const getUserDataUseCase = makeGetUserDataUseCase()
 
-      const { user}  = await getUserDataUseCase.execute({
-        id: req.user.sub
-      })
+  const { user } = await getUserDataUseCase.execute({
+    id: req.user.sub
+  })
 
-      return reply.status(200).send({
-        user:{
-        ...user, 
-        id:undefined,
-        password:undefined
-        }
-     })
-        
+  return reply.status(200).send({
+    user: {
+      ...user,
+      id: undefined,
+      password: undefined
+    }
+  })
+
 }

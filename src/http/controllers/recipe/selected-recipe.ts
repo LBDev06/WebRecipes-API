@@ -1,19 +1,19 @@
-import { makeGetSelectedRecipe } from "@/services/factories/make-get-selected-recipe";
+import { makeGetSelectedRecipe } from "@/main/factories/make-get-selected-recipe";
 import { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 
-export async function selectedRecipe(req: FastifyRequest, reply: FastifyReply){
+export async function selectedRecipe(req: FastifyRequest, reply: FastifyReply) {
   const recipeIdSchema = z.object({
-    id:z.string().uuid()
+    id: z.string().uuid()
   })
 
   const { id } = recipeIdSchema.parse(req.params)
-  
+
   try {
     const selectedRecipeUseCase = makeGetSelectedRecipe()
 
     const { recipe } = await selectedRecipeUseCase.execute({
-        id
+      id
     })
 
     const { userId: _, ...selectedRecipeByUser } = recipe
@@ -23,5 +23,5 @@ export async function selectedRecipe(req: FastifyRequest, reply: FastifyReply){
   } catch (error) {
     return reply.status(404).send(error)
   }
-  
+
 }

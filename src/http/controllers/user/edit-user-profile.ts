@@ -1,46 +1,46 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
-import { makeEditUserProfileUseCase } from "@/services/factories/make-edit-user-profile-use-case";
-import { ResourceNotFoundError } from "@/services/errors/resource-not-found-error";
+import { makeEditUserProfileUseCase } from "@/main/factories/make-edit-user-profile-use-case";
+import { ResourceNotFoundError } from "@/errors/resource-not-found-error";
 
-export async function editUserProfile(req: FastifyRequest, reply: FastifyReply){
- const userIdSchema = z.string().uuid()
+export async function editUserProfile(req: FastifyRequest, reply: FastifyReply) {
+  const userIdSchema = z.string().uuid()
 
- const userProfileSchema = z.object({
-   bio:z.string().max(300),
-   location:z.string().max(100),
-   experience_level:z.string().max(100),
-   favorite_ingredient:z.string().max(100),
-   cooking_specialities:z.string().max(100),
- })
+  const userProfileSchema = z.object({
+    bio: z.string().max(300),
+    location: z.string().max(100),
+    experience_level: z.string().max(100),
+    favorite_ingredient: z.string().max(100),
+    cooking_specialities: z.string().max(100),
+  })
 
- const { bio,
-         location, 
-         experience_level, 
-         favorite_ingredient, 
-         cooking_specialities } = userProfileSchema.parse(req.body)
- const id  = userIdSchema.parse(req.userId)
-
- try {
-  const makeEditUserProfile = makeEditUserProfileUseCase()
-
-   const userProfile = await makeEditUserProfile.execute({
-    id,
-    bio,
+  const { bio,
     location,
     experience_level,
     favorite_ingredient,
-    cooking_specialities
-   })
-   
-   const {id:__, userId:_, ...userProfileWithoutId} = userProfile.userProfile
+    cooking_specialities } = userProfileSchema.parse(req.body)
+  const id = userIdSchema.parse(req.userId)
 
-   return reply.status(200).send({userProfile: userProfileWithoutId})
+  try {
+    const makeEditUserProfile = makeEditUserProfileUseCase()
 
- } catch (error) {
-   if(error instanceof ResourceNotFoundError){
-    reply.status(404).send({message :`${error.message}`})
-   }
- }
-  
+    const userProfile = await makeEditUserProfile.execute({
+      id,
+      bio,
+      location,
+      experience_level,
+      favorite_ingredient,
+      cooking_specialities
+    })
+
+    const { id: __, userId: _, ...userProfileWithoutId } = userProfile.userProfile
+
+    return reply.status(200).send({ userProfile: userProfileWithoutId })
+
+  } catch (error) {
+    if (error instanceof ResourceNotFoundError) {
+      reply.status(404).send({ message: `${error.message}` })
+    }
+  }
+
 }

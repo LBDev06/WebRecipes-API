@@ -1,28 +1,28 @@
-import { makeDeleteRecipeUseCase } from "@/services/factories/make-delete-recipe-use-case";
+import { makeDeleteRecipeUseCase } from "@/main/factories/make-delete-recipe-use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 
-export async function deleteRecipe(req: FastifyRequest, reply: FastifyReply){
-    const userIdSchema = z.string().uuid()
+export async function deleteRecipe(req: FastifyRequest, reply: FastifyReply) {
+  const userIdSchema = z.string().uuid()
 
-    const deleteRecipeSchema = z.object({
-        recipeId:z.string().uuid()
+  const deleteRecipeSchema = z.object({
+    recipeId: z.string().uuid()
+  })
+
+  const userId = userIdSchema.parse(req.userId)
+  const { recipeId } = deleteRecipeSchema.parse(req.params)
+
+
+  try {
+    const deleteRecipeUseCase = makeDeleteRecipeUseCase()
+
+    await deleteRecipeUseCase.delete({
+      userId,
+      recipeId
     })
+    return reply.status(200).send({ message: 'Recipe deleted successfully' })
 
-    const  userId  = userIdSchema.parse(req.userId)
-    const { recipeId } = deleteRecipeSchema.parse(req.params)
-     
-   
-    try {
-      const deleteRecipeUseCase = makeDeleteRecipeUseCase()
-
-       await deleteRecipeUseCase.delete({
-        userId,
-        recipeId
-      })
-        return reply.status(200).send({message:'Recipe deleted successfully'})
-
-    } catch (error) {
-       return reply.status(404).send({message:`${error}`})
-    }
+  } catch (error) {
+    return reply.status(404).send({ message: `${error}` })
+  }
 }

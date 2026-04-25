@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { makeGetRecipesDashboardUseCase } from "@/services/factories/make-get-recipes-dashboard-use-case";
+import { makeGetRecipesDashboardUseCase } from "@/main/factories/make-get-recipes-dashboard-use-case";
 
-export async function dashboard(req: FastifyRequest, reply: FastifyReply){
+export async function dashboard(req: FastifyRequest, reply: FastifyReply) {
     try {
         const getRecipesDashboardUseCase = makeGetRecipesDashboardUseCase()
         const { recipes } = await getRecipesDashboardUseCase.execute()

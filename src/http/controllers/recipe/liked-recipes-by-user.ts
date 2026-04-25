@@ -1,26 +1,26 @@
-import { makeGetLikedRecipesByUserUseCase } from "@/services/factories/make-get-liked-recipes-by-user-use-case"
+import { makeGetLikedRecipesByUserUseCase } from "@/main/factories/make-get-liked-recipes-by-user-use-case"
 import { FastifyReply, FastifyRequest } from "fastify"
 import z from "zod"
 
 
-export async function likedRecipesByUser(req: FastifyRequest, reply: FastifyReply){
+export async function likedRecipesByUser(req: FastifyRequest, reply: FastifyReply) {
   const userIdSchema = z.string().uuid()
 
   const userId = userIdSchema.parse(req.userId)
 
-   try {
+  try {
     const getLikedRecipesByUserUseCase = makeGetLikedRecipesByUserUseCase()
-     
+
     const { recipes } = await getLikedRecipesByUserUseCase.execute({
-        userId
+      userId
     })
 
     return reply.status(200).send(
-      recipes.map( ({ userId, ...rest }) => rest )
+      recipes.map(({ userId, ...rest }) => rest)
     )
 
-   } catch (error) {
+  } catch (error) {
     return reply.status(404).send(error)
-   }
+  }
 
 }

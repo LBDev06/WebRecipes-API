@@ -1,21 +1,21 @@
-import { makeGetFavoriteRecipeByUserUseCase } from "@/services/factories/make-get-favorite-recipe-by-user-use-case";
+import { makeGetFavoriteRecipeByUserUseCase } from "@/main/factories/make-get-favorite-recipe-by-user-use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 
-export async function favoriteRecipesByUser(req: FastifyRequest, reply: FastifyReply){
+export async function favoriteRecipesByUser(req: FastifyRequest, reply: FastifyReply) {
   const userIdSchema = z.string().uuid()
 
   const userId = userIdSchema.parse(req.userId)
-  
+
   try {
     const getFavoriteRecipeUseCase = makeGetFavoriteRecipeByUserUseCase()
-    
+
     const { recipes } = await getFavoriteRecipeUseCase.execute({
-        userId
+      userId
     })
 
     return reply.status(200).send(
-     recipes.map( ({ userId, ...rest }) => rest )
+      recipes.map(({ userId, ...rest }) => rest)
     )
   } catch (error) {
     return reply.status(404).send(error)

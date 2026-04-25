@@ -1,26 +1,26 @@
-import { makeEditCommentUseCase } from "@/services/factories/make-edit-comment-use-case";
+import { makeEditCommentUseCase } from "@/main/factories/make-edit-comment-use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 import z from "zod";
 
-export async function editComment(req: FastifyRequest, reply: FastifyReply){
+export async function editComment(req: FastifyRequest, reply: FastifyReply) {
 
   const userIdSchema = z.string().uuid()
 
   const idSchema = z.object({
-    recipeId:z.string().uuid(),
-    commentId:z.string().uuid()
+    recipeId: z.string().uuid(),
+    commentId: z.string().uuid()
   })
-   
+
   const commentUpdateSchema = z.object({
-    comment:z.string()
-    .max(500)
-    .optional(),
+    comment: z.string()
+      .max(500)
+      .optional(),
   }).strict()
 
   const commentSchema = z.object({
     data: commentUpdateSchema
   })
-  
+
   const userId = userIdSchema.parse(req.userId)
   const { recipeId, commentId } = idSchema.parse(req.params)
   const { data } = commentSchema.parse(req.body)
@@ -32,14 +32,14 @@ export async function editComment(req: FastifyRequest, reply: FastifyReply){
       userId,
       recipeId,
       commentId,
-      data: {comment: data.comment!}
+      data: { comment: data.comment! }
     })
 
-    const { userId:__, ...commentWithoutUserId} = comment
-   
+    const { userId: __, ...commentWithoutUserId } = comment
+
     reply.status(200).send(commentWithoutUserId)
 
   } catch (error) {
-    reply.status(404).send({message:`${error}`})
+    reply.status(404).send({ message: `${error}` })
   }
 }
